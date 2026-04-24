@@ -6,9 +6,7 @@ namespace Tests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
-use Orchestra\Testbench\Attributes\WithMigration;
 
-#[WithMigration]
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     use RefreshDatabase;
