@@ -1,5 +1,7 @@
 # Laravel Doctrine Factory
 
+[![Tests](https://github.com/stemble/laravel-doctrine-factory/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/stemble/laravel-doctrine-factory/actions/workflows/tests.yml)
+
 Use [Eloquent Factories](https://laravel.com/docs/11.x/eloquent-factories) with your Doctrine Entities.
 
 ## Installation
