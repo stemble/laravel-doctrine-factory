@@ -58,7 +58,8 @@ Status of each Laravel factory feature when used through `DoctrineFactory`:
 | Magic relationship methods (`hasPosts()`, `forUser()`) | ✅ works  |                                                                                              |
 | Many-to-many (`hasAttached()`)                         | ❌ broken | No Doctrine-aware implementation; the magic `has*` handler does not produce the right result |
 | `recycle()`                                            | ❌ broken | Used internally but not verified through the public API                                      |
-| `afterMaking()` / `afterCreating()` callbacks          | ❌ broken | Inherited and invoked, but not verified                                                      |
+| `afterMaking()` callback                               | ✅ works  |                                                                                              |
+| `afterCreating()` callback                             | ❌ broken | Inherited and invoked, but not verified                                                      |
 | Polymorphic relationships                              | N/A      | No direct Doctrine equivalent                                                                |
 | `trashed()` / soft deletes                             | N/A      | Doctrine has no built-in soft deletes                                                        |
 
