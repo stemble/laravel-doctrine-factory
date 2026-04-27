@@ -57,7 +57,7 @@ Status of each Laravel factory feature when used through `DoctrineFactory`:
 | Belongs-to (`for()`)                                   | ✅ works  |                                                                                              |
 | Magic relationship methods (`hasPosts()`, `forUser()`) | ✅ works  |                                                                                              |
 | Many-to-many (`hasAttached()`)                         | ❌ broken | No Doctrine-aware implementation; the magic `has*` handler does not produce the right result |
-| `recycle()`                                            | ❌ broken | Used internally but not verified through the public API                                      |
+| `recycle()`                                            | ✅ works  |                                                                                              |
 | `afterMaking()` callback                               | ✅ works  |                                                                                              |
 | `afterCreating()` callback                             | ✅ works  |                                                                                              |
 | Polymorphic relationships                              | N/A      | No direct Doctrine equivalent                                                                |
