@@ -6,8 +6,8 @@
   "license": "MIT",
   "keywords": [
     "laravel",
-    "typescript",
-    "eloquent"
+    "doctrine",
+    "testing"
   ],
   "authors": [
     {
