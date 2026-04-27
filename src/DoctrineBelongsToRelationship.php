@@ -51,7 +51,7 @@ class DoctrineBelongsToRelationship extends BelongsToRelationship
                     ? ($this->factory->getRandomRecycledModel($this->factory->modelName()) ?? $this->factory->create())
                     : $this->factory;
 
-                return $instance;
+                return $this->resolved = $instance;
             }
 
             return $this->resolved;

@@ -37,6 +37,38 @@ describe('BelongsTo Relationships', function () {
         expect($post->getUser()->getName())->toBe('John Doe');
     });
 
+    test("a shared parent factory resolves to the same instance across multiple children (make)", function () {
+        $posts = Post::factory()
+            ->for(User::factory())
+            ->count(3)
+            ->make();
+
+        expect($posts)->toHaveCount(3);
+
+        $firstUser = $posts->first()->getUser();
+        expect($firstUser)->toBeInstanceOf(User::class);
+
+        $posts->each(function ($post) use ($firstUser) {
+            expect($post->getUser())->toBe($firstUser);
+        });
+    });
+
+    test("a shared parent factory is persisted only once across multiple children (create)", function () {
+        $posts = Post::factory()
+            ->for(User::factory())
+            ->count(3)
+            ->create();
+
+        expect($posts)->toHaveCount(3);
+
+        $firstUserId = $posts->first()->getUser()->getId();
+        expect($firstUserId)->not->toBeNull();
+
+        $posts->each(function ($post) use ($firstUserId) {
+            expect($post->getUser()->getId())->toBe($firstUserId);
+        });
+    });
+
     test("the relationship name can be specified", function () {
         $author = User::factory()->create();
         $secondaryAuthor = User::factory()->create();
