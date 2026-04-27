@@ -56,7 +56,7 @@ Status of each Laravel factory feature when used through `DoctrineFactory`:
 | Has-many (`has()`)                                     | ✅ works  |                                                                                              |
 | Belongs-to (`for()`)                                   | ✅ works  |                                                                                              |
 | Magic relationship methods (`hasPosts()`, `forUser()`) | ✅ works  |                                                                                              |
-| Many-to-many (`hasAttached()`)                         | ❌ broken | No Doctrine-aware implementation; the magic `has*` handler does not produce the right result |
+| Many-to-many (`hasAttached()`)                         | N/A      | Set a `Collection` in factory state for plain M2M, or `->has()` the pivot entity for M2M with pivot data |
 | `recycle()`                                            | ✅ works  |                                                                                              |
 | `afterMaking()` callback                               | ✅ works  |                                                                                              |
 | `afterCreating()` callback                             | ✅ works  |                                                                                              |
