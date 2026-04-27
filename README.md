@@ -18,7 +18,7 @@ Create Laravel factories and extend `Stemble\LaravelDoctrineFactory\DoctrineFact
 usual `Illuminate\Database\Eloquent\Factories\Factory`.
 
 `DoctrineFactory` subclasses the default `Factory` to override how it instantiates and
-saves the objects. Everything else works exactly the same.
+saves the objects. Everything else should work exactly the same.
 
 ## Persistence Semantics
 
@@ -36,6 +36,32 @@ If you call `make()` and later call `EntityManager::flush()` yourself, the made
 entities will be inserted at that point. This is the intended deviation from
 Laravel's `make()`, which leaves models entirely in-memory.
 
+## Feature Compatibility
+
+Status of each Laravel factory feature when used through `DoctrineFactory`:
+
+- ✅ **works** — migrated and behaves like the Eloquent version
+- ⚠️ **semi** — works but in a slightly different way than expected
+- ❌ **broken** — does not work, or has not been verified
+- **N/A** — no change required, or no Doctrine equivalent
+
+| Feature                                                | Status   | Notes                                                                                        |
+|--------------------------------------------------------|----------|----------------------------------------------------------------------------------------------|
+| Defining factories (`definition()`)                    | ✅ works  |                                                                                              |
+| `make()`                                               | ⚠️ semi  | Also calls `EntityManager::persist()` — see [Persistence Semantics](#persistence-semantics)  |
+| `create()`                                             | ✅ works  |                                                                                              |
+| `count()`                                              | ✅ works  |                                                                                              |
+| States (`state()`, state methods)                      | ✅ works  |                                                                                              |
+| Sequences (`Sequence`, `sequence()`)                   | ✅ works  |                                                                                              |
+| Has-many (`has()`)                                     | ✅ works  |                                                                                              |
+| Belongs-to (`for()`)                                   | ✅ works  |                                                                                              |
+| Magic relationship methods (`hasPosts()`, `forUser()`) | ✅ works  |                                                                                              |
+| Many-to-many (`hasAttached()`)                         | ❌ broken | No Doctrine-aware implementation; the magic `has*` handler does not produce the right result |
+| `recycle()`                                            | ❌ broken | Used internally but not verified through the public API                                      |
+| `afterMaking()` / `afterCreating()` callbacks          | ❌ broken | Inherited and invoked, but not verified                                                      |
+| Polymorphic relationships                              | N/A      | No direct Doctrine equivalent                                                                |
+| `trashed()` / soft deletes                             | N/A      | Doctrine has no built-in soft deletes                                                        |
+
 ## Design Philosophy
 
 ### No Documentation Necessary
@@ -45,11 +71,10 @@ factories that works with Doctrine entities. It should mirror the existing API
 so closely that you could read the Laravel documentation and use this package without
 any additional documentation (beyond setup).
 
-### Explained Overrides 
+### Explained Overrides
 
 Quite a few methods are overridden by this package to make Factories work with Doctrine entities.
 The doc blocks of all overridden methods will be explained next to the `@override` tag.
-
 
 # Development
 
