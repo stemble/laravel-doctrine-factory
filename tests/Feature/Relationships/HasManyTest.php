@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Feature\Relationships;
 
 use LaravelDoctrine\ORM\Facades\EntityManager;
@@ -21,7 +20,7 @@ covers(DoctrineFactory::class);
  * @see https://laravel.com/docs/11.x/eloquent-factories#has-many-relationships
  */
 describe('HasMany Relationships', function () {
-    test("create with children", function () {
+    test('create with children', function () {
         /** @var User $user */
         $user = User::factory()
             ->has(Post::factory()->count(3))
@@ -37,7 +36,7 @@ describe('HasMany Relationships', function () {
         });
     });
 
-    test("create with children and specified relationship", function () {
+    test('create with children and specified relationship', function () {
         /** @var User $user */
         $user = User::factory()
             ->has(Post::factory()->count(3), 'posts')
@@ -50,7 +49,7 @@ describe('HasMany Relationships', function () {
         });
     });
 
-    test("create with children and specified non-standard relationship", function () {
+    test('create with children and specified non-standard relationship', function () {
         /** @var User $user */
         $user = User::factory()
             ->has(Post::factory()->count(2), 'secondaryPosts')
@@ -64,8 +63,8 @@ describe('HasMany Relationships', function () {
         });
     });
 
-    describe("magic methods", function () {
-        test("with count only", function () {
+    describe('magic methods', function () {
+        test('with count only', function () {
             /** @var User $user */
             $user = User::factory()
                 ->hasPosts(5)
@@ -78,7 +77,7 @@ describe('HasMany Relationships', function () {
             });
         });
 
-        test("with attributes only", function () {
+        test('with attributes only', function () {
             $title = 'The Count of Monte Cristo';
             /** @var User $user */
             $user = User::factory()
@@ -87,11 +86,10 @@ describe('HasMany Relationships', function () {
 
             expect($user->getPosts())->toHaveCount(1);
 
-            $user->getPosts()->map(function ($post) use ($title, $user) {
+            $user->getPosts()->map(function ($post) use ($title) {
                 expect($post)->getTitle()->toBe($title);
             });
         });
-    })->note("https//laravel.com/docs/11.x/eloquent-factories#has-many-relationships-using-magic-methods");
-
+    })->note('https//laravel.com/docs/11.x/eloquent-factories#has-many-relationships-using-magic-methods');
 
 })->done(issue: 3)->note('https://laravel.com/docs/11.x/eloquent-factories#has-many-relationships');

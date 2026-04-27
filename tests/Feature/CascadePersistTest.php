@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Workbench\App\Entities\Post;
 use Workbench\App\Entities\User;
@@ -10,7 +11,7 @@ describe('BelongsTo relationships', function () {
         expect(function () {
             $user = new User('John Doe');  // Unpersisted user
 
-            $post = new Post();
+            $post = new Post;
             $post->setTitle('Test Post');
             $post->setUser($user);         // Setting unpersisted relationship
             $post->setSecondaryAuthor($user); // Another unpersisted relationship
@@ -18,7 +19,7 @@ describe('BelongsTo relationships', function () {
             EntityManager::persist($post);
             EntityManager::flush();
         })->toThrow(
-            Doctrine\ORM\ORMInvalidArgumentException::class,
+            ORMInvalidArgumentException::class,
             'not configured to cascade persist'
         );
     });
@@ -38,20 +39,19 @@ describe('BelongsTo relationships', function () {
     })->skip('fails in CI with TableNotFoundException; passes locally — likely EntityManager state polluted by the prior throw-test');
 });
 
-
 describe('HasMany relationships', function () {
     test('it throws exception when persisting entity with unpersisted relationships', function () {
         expect(function () {
             $user = new User('John Doe');  // Unpersisted user
 
-            $post = new Post();
+            $post = new Post;
             $post->setTitle('Test Post');
             $user->getPosts()->add($post);
 
             EntityManager::persist($user);
             EntityManager::flush();
         })->toThrow(
-            Doctrine\ORM\ORMInvalidArgumentException::class,
+            ORMInvalidArgumentException::class,
             'not configured to cascade persist'
         );
     });

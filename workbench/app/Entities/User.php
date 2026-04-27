@@ -42,14 +42,14 @@ class User
     protected Collection $children;
 
     /**
-     * @param $id
+     * @param  $id
      */
     public function __construct(string $name)
     {
         $this->name = $name;
-        $this->posts = new ArrayCollection();
-        $this->secondaryPosts = new ArrayCollection();
-        $this->children = new ArrayCollection();
+        $this->posts = new ArrayCollection;
+        $this->secondaryPosts = new ArrayCollection;
+        $this->children = new ArrayCollection;
     }
 
     public function getId(): int

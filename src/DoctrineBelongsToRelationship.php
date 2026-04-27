@@ -21,7 +21,6 @@ class DoctrineBelongsToRelationship extends BelongsToRelationship
      * @override $relationship will never be a `MorphTo` instance.
      * @override Doctrine Entities don't expose foreign keys, so the $relationship name is what's assigned.
      *
-     * @param  $model
      * @return array
      */
     public function attributesFor($model)
@@ -40,13 +39,13 @@ class DoctrineBelongsToRelationship extends BelongsToRelationship
      * return the whole instance and the EntityManager will handle
      * mapping those to foreign keys.
      *
-     * @param string|null $key
+     * @param  string|null  $key
      * @return \Closure
      */
     protected function resolver($key)
     {
-        return function () use ($key) {
-            if (!$this->resolved) {
+        return function () {
+            if (! $this->resolved) {
                 $instance = $this->factory instanceof Factory
                     ? ($this->factory->getRandomRecycledModel($this->factory->modelName()) ?? $this->factory->create())
                     : $this->factory;
@@ -57,5 +56,4 @@ class DoctrineBelongsToRelationship extends BelongsToRelationship
             return $this->resolved;
         };
     }
-
 }

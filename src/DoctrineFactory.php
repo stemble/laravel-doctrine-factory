@@ -12,7 +12,6 @@ use LaravelDoctrine\ORM\Facades\EntityManager;
 use ReflectionClass;
 use ReflectionException;
 
-
 /**
  * @template TModel
  *
@@ -27,13 +26,13 @@ abstract class DoctrineFactory extends Factory
      * instance of Model. With Doctrine there is no common superclass, so we instead check if the
      * result is a Collection.
      *
-     * @param (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed> $attributes
-     * @param \Object|null $parent
+     * @param  (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed>  $attributes
+     * @param  object|null  $parent
      * @return \Illuminate\Database\Eloquent\Collection<int, TModel>|TModel
      */
     public function create($attributes = [], ?Model $parent = null)
     {
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $this->state($attributes)->create([], $parent);
         }
 
@@ -65,13 +64,12 @@ abstract class DoctrineFactory extends Factory
      *      `newModel()->newCollection()`, since Doctrine entities don't share a
      *      base class that exposes `newCollection()`.
      *
-     * @param (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed> $attributes
-     * @param \Illuminate\Database\Eloquent\Model|null $parent
-     * @return \Illuminate\Support\Collection<int, TModel>|TModel
+     * @param  (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed>  $attributes
+     * @return Collection<int, TModel>|TModel
      */
     public function make($attributes = [], ?Model $parent = null)
     {
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             return $this->state($attributes)->make([], $parent);
         }
 
@@ -109,8 +107,9 @@ abstract class DoctrineFactory extends Factory
      * use reflection to create a new instance without using the constructor, and
      * then set the properties directly–even if they are private.
      *
-     * @param array<string, mixed> $attributes
+     * @param  array<string, mixed>  $attributes
      * @return TModel|Collection<TModel>
+     *
      * @throws MissingConstructorAttributesException|ReflectionException
      */
     public function newModel(array $attributes = [])
@@ -127,7 +126,7 @@ abstract class DoctrineFactory extends Factory
                 if (array_key_exists($param->getName(), $attributes)) {
                     $constructorArgs[$param->getName()] = $attributes[$param->getName()];
                     unset($attributes[$param->getName()]);
-                } else if (!$param->isOptional()) {
+                } elseif (! $param->isOptional()) {
                     throw new MissingConstructorAttributesException($this, $param);
                 }
             }
@@ -171,7 +170,7 @@ abstract class DoctrineFactory extends Factory
      * @override This method is overridden to use the `EntityManager` facade to persist the models
      * rather than the `Model::create` method that is used in the Eloquent factories.
      *
-     * @param \Illuminate\Support\Collection<int, TModel> $results
+     * @param  Collection<int, TModel>  $results
      * @return void
      */
     protected function store(Collection $results)
@@ -195,7 +194,6 @@ abstract class DoctrineFactory extends Factory
     /**
      * Create the children for the given model.
      *
-     * @param  $model
      * @return void
      */
     protected function createChildren($model)
@@ -212,8 +210,8 @@ abstract class DoctrineFactory extends Factory
      * to the `for` property, rather then the `BelongsToRelationship` class that is used in the
      * Eloquent factories.
      *
-     * @param \Illuminate\Database\Eloquent\Factories\Factory|\Illuminate\Database\Eloquent\Model $factory
-     * @param string|null $relationship
+     * @param  Factory|Model  $factory
+     * @param  string|null  $relationship
      * @return static
      */
     public function for($factory, $relationship = null)
@@ -229,9 +227,8 @@ abstract class DoctrineFactory extends Factory
     /**
      * Define a child relationship for the model.
      *
-     * @param DoctrineFactory $factory
-     * @param string|null $relationship
-     * @return static
+     * @param  DoctrineFactory  $factory
+     * @param  string|null  $relationship
      */
     public function has($factory, $relationship = null): static
     {
@@ -240,6 +237,7 @@ abstract class DoctrineFactory extends Factory
             $factory,
             $relationship ?? $guessRelationship
         );
+
         return $this->newInstance([
             'has' => $this->has->concat([$doctrineRelationship]),
         ]);
@@ -251,20 +249,20 @@ abstract class DoctrineFactory extends Factory
      * @override The original relies on specific Eloquent model information
      * that we do not have on Doctrine Entities.
      *
-     * @param string $method
-     * @param array $parameters
+     * @param  string  $method
+     * @param  array  $parameters
      * @return mixed
      */
     public function __call($method, $parameters)
     {
-        if (!Str::startsWith($method, ['for', 'has'])) {
+        if (! Str::startsWith($method, ['for', 'has'])) {
             return parent::__call($method, $parameters);
         }
 
         $relationship = Str::camel(Str::substr($method, 3));
 
         // TODO: This will not support nested Entities
-        $factoryName = static::$namespace . 'Entities\\' . Str::singular(Str::studly($relationship)) . 'Factory';
+        $factoryName = static::$namespace.'Entities\\'.Str::singular(Str::studly($relationship)).'Factory';
         $factory = new $factoryName;
 
         if (Str::startsWith($method, 'for')) {
@@ -284,7 +282,7 @@ abstract class DoctrineFactory extends Factory
     /**
      * Returns true if the given object is a Doctrine Entity.
      *
-     * @param mixed $object
+     * @param  mixed  $object
      * @return bool
      */
     private function blindlyAttemptToPersist($object)
@@ -301,14 +299,13 @@ abstract class DoctrineFactory extends Factory
             }
         } catch (\Exception $e) {
         }
+
         return $object;
     }
 
     /**
-     *
      * @overrides The original implementation to return the whole object instead of it's key.
      *
-     * @param array $definition
      * @return array
      */
     protected function expandAttributes(array $definition)
@@ -341,17 +338,19 @@ abstract class DoctrineFactory extends Factory
                             $newCollection->add($entityOrFactory);
                         }
                     }
+
                     return $newCollection;
                 }
 
                 return $attribute;
             })
             ->map(function ($attribute, $key) use (&$definition, $evaluateRelations) {
-                if (is_callable($attribute) && !is_string($attribute) && !is_array($attribute)) {
+                if (is_callable($attribute) && ! is_string($attribute) && ! is_array($attribute)) {
                     $attribute = $attribute($definition);
                 }
                 $attribute = $evaluateRelations($attribute);
                 $definition[$key] = $attribute;
+
                 return $attribute;
             })
             ->all();

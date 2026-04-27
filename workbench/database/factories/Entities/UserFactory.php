@@ -2,9 +2,7 @@
 
 namespace Workbench\Database\Factories\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Stemble\LaravelDoctrineFactory\DoctrineFactory;
-
 use Workbench\App\Entities\User;
 
 class UserFactory extends DoctrineFactory

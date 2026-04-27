@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Feature\Relationships;
 
 use LaravelDoctrine\ORM\Facades\EntityManager;
@@ -11,7 +10,7 @@ use Workbench\App\Entities\Post;
 use Workbench\App\Entities\User;
 
 describe('BelongsTo Relationships', function () {
-    test("the parent can be an instance", function () {
+    test('the parent can be an instance', function () {
         $user = User::factory()->make();
 
         $post = Post::factory()
@@ -21,7 +20,7 @@ describe('BelongsTo Relationships', function () {
         expect($post->getUser())->toBe($user);
     });
 
-    test("the parent can be a factory", function () {
+    test('the parent can be a factory', function () {
         $post = Post::factory()
             ->for(User::factory())
             ->make();
@@ -37,7 +36,7 @@ describe('BelongsTo Relationships', function () {
         expect($post->getUser()->getName())->toBe('John Doe');
     });
 
-    test("a shared parent factory resolves to the same instance across multiple children (make)", function () {
+    test('a shared parent factory resolves to the same instance across multiple children (make)', function () {
         $posts = Post::factory()
             ->for(User::factory())
             ->count(3)
@@ -53,7 +52,7 @@ describe('BelongsTo Relationships', function () {
         });
     });
 
-    test("a shared parent factory is persisted only once across multiple children (create)", function () {
+    test('a shared parent factory is persisted only once across multiple children (create)', function () {
         $posts = Post::factory()
             ->for(User::factory())
             ->count(3)
@@ -69,7 +68,7 @@ describe('BelongsTo Relationships', function () {
         });
     });
 
-    test("the relationship name can be specified", function () {
+    test('the relationship name can be specified', function () {
         $author = User::factory()->create();
         $secondaryAuthor = User::factory()->create();
 
@@ -82,8 +81,8 @@ describe('BelongsTo Relationships', function () {
             ->and($post->getSecondaryAuthor())->toEqual($secondaryAuthor);
     });
 
-    describe("magic methods can infer the relationship", function () {
-        test("calling without arguments", function () {
+    describe('magic methods can infer the relationship', function () {
+        test('calling without arguments', function () {
             $post = Post::factory()
                 ->forUser()
                 ->make();
@@ -91,17 +90,17 @@ describe('BelongsTo Relationships', function () {
             expect($post->getUser())->toBeInstanceOf(User::class);
         });
 
-        test("calling with array attributes", function () {
-            $name = "Donkey Kong";
+        test('calling with array attributes', function () {
+            $name = 'Donkey Kong';
 
-            $post = Post::factory()->forUser(["name" => $name])->make();
+            $post = Post::factory()->forUser(['name' => $name])->make();
 
             expect($post->getUser())->getName()->toEqual($name);
         });
     })->note('https://laravel.com/docs/11.x/eloquent-factories#belongs-to-relationships-using-magic-methods')
         ->done(issue: 5);
 
-    it("creates all records", function () {
+    it('creates all records', function () {
         $post = Post::factory()
             ->for(User::factory())
             ->create();
@@ -113,29 +112,29 @@ describe('BelongsTo Relationships', function () {
         expect(EntityManager::find(User::class, $post->getUser()->getId()))->not->toBeNull();
     });
 
-    it("entities created by BelongsTo relationship should get passed to constructor", function () {
+    it('entities created by BelongsTo relationship should get passed to constructor', function () {
         $comment = Comment::factory()
             // The Comment constructor requires a Post instance.
             ->for(Post::factory()->forUser())
             ->create([
-                "body" => "Blah",
-                "user" => User::factory()->create(),
+                'body' => 'Blah',
+                'user' => User::factory()->create(),
             ]);
 
-        expect($comment)->getBody()->toBe("Blah");
+        expect($comment)->getBody()->toBe('Blah');
         expect($comment)->getPost()->toBeInstanceOf(Post::class);
     });
 
-    it("entities made by BelongsTo relationship should get passed to constructor", function () {
+    it('entities made by BelongsTo relationship should get passed to constructor', function () {
         $comment = Comment::factory()
             // The Comment constructor requires a Post instance.
             ->for(Post::factory()->forUser())
             ->forUser()
             ->make([
-                "body" => "Blah",
+                'body' => 'Blah',
             ]);
 
-        expect($comment)->getBody()->toBe("Blah");
+        expect($comment)->getBody()->toBe('Blah');
         expect($comment)->getPost()->toBeInstanceOf(Post::class);
     });
 })->note(note: 'https://laravel.com/docs/11.x/eloquent-factories#belongs-to-relationships')

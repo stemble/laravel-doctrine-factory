@@ -20,7 +20,7 @@ covers(DoctrineFactory::class);
  * @see https://laravel.com/docs/11.x/eloquent-factories#persisting-models
  */
 describe('Persisting Entities', function () {
-    test("create", function () {
+    test('create', function () {
         $entity = User::factory()->create();
 
         expect($entity)->toBeInstanceOf(User::class);
@@ -28,7 +28,7 @@ describe('Persisting Entities', function () {
         EntityManager::refresh($entity);
     });
 
-    test("overriding attributes", function () {
+    test('overriding attributes', function () {
         $name = 'Billy the Kid';
 
         $entity = User::factory()->create(['name' => $name]);
@@ -36,7 +36,7 @@ describe('Persisting Entities', function () {
         expect($entity)->getName()->toBe($name);
     });
 
-    test("create multiple", function () {
+    test('create multiple', function () {
         $users = User::factory()->count(3)->create();
 
         expect($users)
