@@ -17,4 +17,16 @@
             <directory suffix=".php">./src</directory>
         </include>
     </source>
+    <php>
+        <!--
+            Use a real sqlite file (not :memory:) for tests. Doctrine opens its
+            own PDO separate from Laravel's, so :memory: gives each connection
+            its own empty database — Eloquent migrations would be invisible to
+            Doctrine and Doctrine inserts would hit "no such table". A shared
+            file lets both connections see the same schema. The file is touched
+            into existence by tests/TestCase.php before the first connection.
+        -->
+        <env name="DB_CONNECTION" value="sqlite" force="true"/>
+        <env name="DB_DATABASE" value="/tmp/laravel-doctrine-factory.sqlite" force="true"/>
+    </php>
 </phpunit>

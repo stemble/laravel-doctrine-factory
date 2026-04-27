@@ -26,7 +26,7 @@ describe('BelongsTo relationships', function () {
 
     test('it does not throw when the parent comes from a forX() chain', function () {
         Post::factory()->forUser()->create();
-    })->skip('fails in CI with TableNotFoundException; passes locally — same flake as the definition() case below');
+    })->throwsNoExceptions();
 
     test('it does not throw when an unpersisted parent entity is passed via attributes', function () {
         Post::factory()->create([
@@ -36,7 +36,7 @@ describe('BelongsTo relationships', function () {
 
     test('it does not throw when the parent factory comes from definition()', function () {
         Post::factory()->create([]);
-    })->skip('fails in CI with TableNotFoundException; passes locally — likely EntityManager state polluted by the prior throw-test');
+    })->throwsNoExceptions();
 });
 
 describe('HasMany relationships', function () {
