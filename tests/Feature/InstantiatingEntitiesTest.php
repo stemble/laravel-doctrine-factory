@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Collection;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
-use Nolanos\LaravelDoctrineFactory\MissingConstructorAttributesException;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\MissingConstructorAttributesException;
 use Workbench\App\Entities\User;
 
 /**

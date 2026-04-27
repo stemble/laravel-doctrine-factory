@@ -7,12 +7,12 @@ Use [Eloquent Factories](https://laravel.com/docs/11.x/eloquent-factories) with 
 Install via Composer:
 
 ```bash
-composer require nolanos/laravel-doctrine-factory
+composer require stemble/laravel-doctrine-factory
 ```
 
 ## Usage
 
-Create Laravel factories and extend `Nolanos\LaravelDoctrineFactory\DoctrineFactory` instead of the
+Create Laravel factories and extend `Stemble\LaravelDoctrineFactory\DoctrineFactory` instead of the
 usual `Illuminate\Database\Eloquent\Factories\Factory`.
 
 `DoctrineFactory` subclasses the default `Factory` to override how it instantiates and
@@ -38,7 +38,7 @@ The doc blocks of all overridden methods will be explained next to the `@overrid
 ### Setup
 
 ```bash
-git clone git@github.com:nolanos/laravel-doctrine-factory.git
+git clone git@github.com:stemble/laravel-doctrine-factory.git
 
 cd laravel-doctrine-factory
 
@@ -61,5 +61,5 @@ git tag vx.x.x
 git push origin vx.x.x
 ```
 
-Go to [Packagist](https://packagist.org/packages/nolanos/laravel-doctrine-factory) and click on "Update" to
+Go to [Packagist](https://packagist.org/packages/stemble/laravel-doctrine-factory) and click on "Update" to
 update the package.

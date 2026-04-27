@@ -5,7 +5,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {

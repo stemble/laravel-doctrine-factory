@@ -1,6 +1,6 @@
 <?php
 
-namespace Nolanos\LaravelDoctrineFactory;
+namespace Stemble\LaravelDoctrineFactory;
 
 class MissingConstructorAttributesException extends \Exception
 {

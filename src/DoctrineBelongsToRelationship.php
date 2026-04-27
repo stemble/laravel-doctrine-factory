@@ -1,6 +1,6 @@
 <?php
 
-namespace Nolanos\LaravelDoctrineFactory;
+namespace Stemble\LaravelDoctrineFactory;
 
 use Illuminate\Database\Eloquent\Factories\BelongsToRelationship;
 use Illuminate\Database\Eloquent\Factories\Factory;

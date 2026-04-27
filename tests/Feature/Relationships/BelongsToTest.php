@@ -4,8 +4,8 @@
 namespace Tests\Feature\Relationships;
 
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Nolanos\LaravelDoctrineFactory\DoctrineBelongsToRelationship;
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\DoctrineBelongsToRelationship;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 use Workbench\App\Entities\Comment;
 use Workbench\App\Entities\Post;
 use Workbench\App\Entities\User;

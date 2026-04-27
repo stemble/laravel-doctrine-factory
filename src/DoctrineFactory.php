@@ -1,6 +1,6 @@
 <?php
 
-namespace Nolanos\LaravelDoctrineFactory;
+namespace Stemble\LaravelDoctrineFactory;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;

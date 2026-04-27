@@ -2,7 +2,7 @@
 
 namespace Workbench\Database\Factories\Entities;
 
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 
 use Workbench\App\Entities\Comment;
 use Workbench\App\Entities\Post;

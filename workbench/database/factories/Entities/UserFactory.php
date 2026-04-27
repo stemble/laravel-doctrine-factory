@@ -3,7 +3,7 @@
 namespace Workbench\Database\Factories\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 
 use Workbench\App\Entities\User;
 

@@ -9,7 +9,7 @@
 |
 | @see https://pestphp.com/docs/team-management
 */
-pest()->project()->github('nolanos/laravel-doctrine-factory');
+pest()->project()->github('stemble/laravel-doctrine-factory');
 
 /*
 |--------------------------------------------------------------------------

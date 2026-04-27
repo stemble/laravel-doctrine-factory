@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Support\Collection;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 use Workbench\App\Entities\User;
 
 /**

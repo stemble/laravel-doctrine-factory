@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
-use Nolanos\LaravelDoctrineFactory\DoctrineFactory;
+use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 use Workbench\App\Entities\User;
 
 /**
