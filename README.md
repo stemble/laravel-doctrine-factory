@@ -4,6 +4,21 @@
 
 Use [Eloquent Factories](https://laravel.com/docs/11.x/eloquent-factories) with your Doctrine Entities.
 
+## Why Not the Official Factories?
+
+`laravel-doctrine/orm` ships with [its own factory system](https://laravel-doctrine-orm-official.readthedocs.io/en/latest/testing.html),
+but its API is frozen at Laravel's pre-8.x style:
+
+- Factories are registered as global closures via `$factory->define(...)` — no class-based factories
+- "States" are second-class — declared via `defineAs(..., 'admin', ...)` instead of first-class state methods
+- No relationship helpers (`for()`, `has()`)
+- No sequences, no `recycle()`, no `afterMaking` / `afterCreating` callbacks
+- No magic relationship methods (`hasPosts()`, `forUser()`)
+
+By contrast, this package keeps you on Laravel's modern factory API. If you already know Eloquent factories
+you already know this package — read the [Laravel docs](https://laravel.com/docs/11.x/eloquent-factories) and use
+this package as a drop-in replacement. See [Feature Compatibility](#feature-compatibility) for the full status grid.
+
 ## Installation
 
 Install via Composer:
