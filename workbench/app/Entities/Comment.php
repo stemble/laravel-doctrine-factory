@@ -21,25 +21,18 @@ class Comment
     #[Column(type: 'text')]
     protected string $body;
 
-
     #[ManyToOne(targetEntity: User::class)]
     protected ?User $user = null;
 
     #[ManyToOne(targetEntity: Post::class)]
     protected Post $post;
 
-    /**
-     * @param string $body
-     * @param User|null $user
-     * @param Post $post
-     */
     public function __construct(string $body, Post $post, ?User $user = null)
     {
         $this->body = $body;
         $this->user = $user;
         $this->post = $post;
     }
-
 
     public function getId(): int
     {

@@ -1,5 +1,7 @@
 <?php
 
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Team Management
@@ -22,7 +24,7 @@ pest()->project()->github('stemble/laravel-doctrine-factory');
 |
 */
 
- uses(Tests\TestCase::class)->in('Feature');
+uses(TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------

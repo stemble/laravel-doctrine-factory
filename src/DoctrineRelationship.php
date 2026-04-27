@@ -10,7 +10,6 @@ class DoctrineRelationship extends Relationship
     /**
      * Create the child relationship for the given parent model.
      *
-     * @param $parent
      * @return void
      */
     public function createFor($parent)

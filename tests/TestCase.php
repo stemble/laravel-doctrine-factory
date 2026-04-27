@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Stemble\LaravelDoctrineFactory\DoctrineFactory;

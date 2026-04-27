@@ -19,7 +19,7 @@ covers(DoctrineFactory::class);
  * @see https://laravel.com/docs/11.x/eloquent-factories#sequences
  */
 describe('Sequences', function () {
-    test("create with sequence", function () {
+    test('create with sequence', function () {
         User::factory()
             ->count(4)
             ->state(new Sequence(
@@ -32,7 +32,7 @@ describe('Sequences', function () {
             });
     });
 
-    test("using a closure", function () {
+    test('using a closure', function () {
         $users = User::factory()
             ->count(10)
             ->state(new Sequence(
@@ -44,7 +44,7 @@ describe('Sequences', function () {
             });
     });
 
-    test("sequence method", function () {
+    test('sequence method', function () {
         [$first, $second] = User::factory()
             ->count(2)
             ->sequence(
