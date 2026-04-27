@@ -31,7 +31,14 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
     protected function defineEnvironment($app)
     {
-        // Setup default database to use sqlite :memory:
+        // The sqlite database path comes from phpunit.xml (DB_DATABASE env).
+        // Laravel's SQLiteConnector throws if the file doesn't exist, so make
+        // sure it's there before the first connection attempt.
+        $database = config('database.connections.sqlite.database');
+        if ($database && $database !== ':memory:' && ! file_exists($database)) {
+            touch($database);
+        }
+
         tap($app['config'], function ($config) {
             $config->set('doctrine.managers.default.meta', 'attributes');
             $config->set('doctrine.managers.default.connection', 'sqlite');
