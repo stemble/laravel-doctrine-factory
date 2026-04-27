@@ -18,6 +18,22 @@ usual `Illuminate\Database\Eloquent\Factories\Factory`.
 `DoctrineFactory` subclasses the default `Factory` to override how it instantiates and
 saves the objects. Everything else works exactly the same.
 
+## Persistence Semantics
+
+Doctrine splits "register an entity with the EntityManager" (`persist`) from "write
+to the database" (`flush`). This package mirrors that split across `make` and `create`:
+
+- **`make()`** — instantiates the entity and calls `EntityManager::persist()` on it.
+  Nothing is written to the database yet. Related entities pulled in through the
+  factory chain are persisted too, so a later `flush()` will save them together
+  without requiring `cascade: ['persist']` on every association.
+- **`create()`** — does everything `make()` does, then calls `EntityManager::flush()`
+  to write the changes.
+
+If you call `make()` and later call `EntityManager::flush()` yourself, the made
+entities will be inserted at that point. This is the intended deviation from
+Laravel's `make()`, which leaves models entirely in-memory.
+
 ## Design Philosophy
 
 ### No Documentation Necessary

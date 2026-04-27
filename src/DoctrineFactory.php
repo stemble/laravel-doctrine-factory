@@ -55,9 +55,15 @@ abstract class DoctrineFactory extends Factory
     /**
      * Create a collection of models.
      *
-     * @override This method is exactly the same, except it directly creates new collections
-     * instead of going through the `newModel()->newCollection()` method that is used in the
-     * Eloquent factories.
+     * @override Two changes from the Eloquent version:
+     *   1. Each instance is passed to `EntityManager::persist()` so it is tracked
+     *      by the UnitOfWork. Nothing is written to the database — that requires
+     *      `EntityManager::flush()` (which `create()` calls). This is what allows
+     *      related entities pulled in by the factory chain to be flushed together
+     *      without `cascade: ['persist']` on every association.
+     *   2. Collections are constructed via `collect()` directly instead of
+     *      `newModel()->newCollection()`, since Doctrine entities don't share a
+     *      base class that exposes `newCollection()`.
      *
      * @param (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed> $attributes
      * @param \Illuminate\Database\Eloquent\Model|null $parent
