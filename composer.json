@@ -1,8 +1,8 @@
 {
-  "name": "nolanos/laravel-doctrine-factory",
-  "description": "Generate Typescript definitions for your Eloquent models",
+  "name": "stemble/laravel-doctrine-factory",
+  "description": "Laravel style Factories for Doctrine Entities",
   "type": "library",
-  "homepage": "https://github.com/nolanos/laravel-doctrine-factory",
+  "homepage": "https://github.com/stemble/laravel-doctrine-factory",
   "license": "MIT",
   "keywords": [
     "laravel",
@@ -12,24 +12,22 @@
   "authors": [
     {
       "name": "Nolan Phillips",
-      "email": "hello@nolanphillips.com",
-      "role": "Developer",
-      "homepage": "https://nolanphillips.com"
+      "email": "nolan@stemble.com",
+      "role": "Developer"
+    },
+    {
+      "name": "Trevor Profitt",
+      "email": "trevor@stemble.com",
+      "role": "Developer"
     }
   ],
   "support": {
-    "source": "https://github.com/nolanos/laravel-doctrine-factory",
-    "issues": "https://github.com/nolanos/laravel-doctrine-factory/issues"
+    "source": "https://github.com/stemble/laravel-doctrine-factory",
+    "issues": "https://github.com/stemble/laravel-doctrine-factory/issues"
   },
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/ncphillips"
-    }
-  ],
   "autoload": {
     "psr-4": {
-      "Nolanos\\LaravelDoctrineFactory\\": "src/"
+      "Stemble\\LaravelDoctrineFactory\\": "src/"
     }
   },
   "autoload-dev": {
@@ -59,7 +57,7 @@
     ]
   },
   "require": {
-    "php": "^8.2",
+    "php": "^8.2|^8.3|^8.4",
     "laravel-doctrine/orm": "^2.1|^3.0",
     "laravel/framework": "^9.0|^10.0|^11.0|^12.0|^13.0"
   },
