@@ -4,8 +4,10 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
+use Orchestra\Testbench\Attributes\ResetRefreshDatabaseState;
 use Stemble\LaravelDoctrineFactory\DoctrineFactory;
 
+#[ResetRefreshDatabaseState]
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     use RefreshDatabase;

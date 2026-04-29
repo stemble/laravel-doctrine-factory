@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use LaravelDoctrine\ORM\Facades\EntityManager;
