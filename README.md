@@ -28,14 +28,43 @@ Install via Composer:
 composer require stemble/laravel-doctrine-factory
 ```
 
-## Usage
+## Getting Started
 
-Create Laravel factories and extend `Stemble\LaravelDoctrineFactory\DoctrineFactory` instead of the
-usual `Illuminate\Database\Eloquent\Factories\Factory`:
+Add Laravel's `HasFactory` trait to your entity and annotate it with `@implements HasFactory<YourFactory>`.
+The annotation is optional but gives IDEs full type inference — `User::factory()` returns `UserFactory`,
+so state methods like `->admin()` are recognised without a cast.
+
+`DoctrineFactory` extends Laravel's `Illuminate\Database\Eloquent\Factories\Factory` rather than replacing it,
+so the standard `HasFactory` trait works without modification — there is no Doctrine-specific version to import.
+
+```php
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
+/**
+ * @implements HasFactory<UserFactory>
+ */
+class User
+{
+    use HasFactory;
+
+    private string $name;
+    private bool $admin = false;
+    private Collection $posts;
+
+    public function __construct(string $name)
+    {
+        $this->name  = $name;
+        $this->posts = new ArrayCollection;
+    }
+}
+```
+
+Then create a factory that extends `Stemble\LaravelDoctrineFactory\DoctrineFactory`:
 
 ```php
 use Stemble\LaravelDoctrineFactory\DoctrineFactory;
-use App\Entities\User;
 
 class UserFactory extends DoctrineFactory
 {
@@ -44,19 +73,28 @@ class UserFactory extends DoctrineFactory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name'  => fake()->name(),
             'admin' => false,
         ];
+    }
+
+    public function admin(): static
+    {
+        return $this->state(['admin' => true]);
     }
 }
 ```
 
-Then use it the same way you'd use any Laravel factory:
+Factory discovery follows the same convention as Eloquent: given an entity `App\Entities\User`, Laravel looks
+for `Database\Factories\Entities\UserFactory`. The factory file lives in `database/factories/Entities/UserFactory.php`.
+Subdirectories under `database/factories/` are mirrored from your entity namespace below `App\`.
+
+Use it the same way you'd use any Laravel factory:
 
 ```php
-$user = User::factory()->create();
+$user  = User::factory()->create();
 $users = User::factory()->count(3)->create();
-$admin = User::factory()->state(['admin' => true])->create();
+$admin = User::factory()->admin()->create();
 ```
 
 ## Feature Compatibility
@@ -64,40 +102,34 @@ $admin = User::factory()->state(['admin' => true])->create();
 Status of each Laravel factory feature when used through `DoctrineFactory`:
 
 - ✅ **works** — migrated and behaves like the Eloquent version
-- ⚠️ **semi** — works but in a slightly different way than expected
+- ✅ **works\*** — works, but with intentionally different semantics; see linked note
 - ❌ **broken** — does not work, or has not been verified
 - **N/A** — no change required, or no Doctrine equivalent
 
-| Feature                                                | Status  | Notes                                                                                                                   |
-|--------------------------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------|
-| Defining factories (`definition()`)                    | ✅ works |                                                                                                                         |
-| `make()`                                               | ⚠️ semi | Also calls `EntityManager::persist()` — see [`make()` persists to the identity map](#make-persists-to-the-identity-map) |
-| `create()`                                             | ✅ works |                                                                                                                         |
-| `count()`                                              | ✅ works |                                                                                                                         |
-| States (`state()`, state methods)                      | ✅ works |                                                                                                                         |
-| Sequences (`Sequence`, `sequence()`)                   | ✅ works |                                                                                                                         |
-| Has-many (`has()`)                                     | ✅ works |                                                                                                                         |
-| Belongs-to (`for()`)                                   | ✅ works |                                                                                                                         |
-| Magic relationship methods (`hasPosts()`, `forUser()`) | ✅ works |                                                                                                                         |
-| Many-to-many (`hasAttached()`)                         | N/A     | Set a `Collection` in factory state for plain M2M, or `->has()` the pivot entity for M2M with pivot data                |
-| `recycle()`                                            | ✅ works |                                                                                                                         |
-| `afterMaking()` callback                               | ✅ works |                                                                                                                         |
-| `afterCreating()` callback                             | ✅ works |                                                                                                                         |
-| Polymorphic relationships                              | N/A     | No direct Doctrine equivalent                                                                                           |
-| `trashed()` / soft deletes                             | N/A     | Doctrine has no built-in soft deletes                                                                                   |
-
-## Design Philosophy
-
-This package mirrors Laravel's `Illuminate\Database\Eloquent\Factories\Factory` API as closely as possible,
-so the [Laravel docs](https://laravel.com/docs/11.x/eloquent-factories) work as your primary reference. The sections
-below cover only the deviations that arise from working with Doctrine — everything else behaves
-exactly like Eloquent factories.
+| Feature                                                | Status   | Notes                                                                                                                   |
+|--------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------|
+| Defining factories (`definition()`)                    | ✅ works  |                                                                                                                         |
+| `make()`                                               | ✅ works* | Also calls `EntityManager::persist()` — see [`make()` persists to the identity map](#make-persists-to-the-identity-map) |
+| `create()`                                             | ✅ works  |                                                                                                                         |
+| `count()`                                              | ✅ works  |                                                                                                                         |
+| States (`state()`, state methods)                      | ✅ works  |                                                                                                                         |
+| Sequences (`Sequence`, `sequence()`)                   | ✅ works  |                                                                                                                         |
+| Has-many (`has()`)                                     | ✅ works  |                                                                                                                         |
+| Belongs-to (`for()`)                                   | ✅ works  |                                                                                                                         |
+| Magic relationship methods (`hasPosts()`, `forUser()`) | ✅ works  |                                                                                                                         |
+| Many-to-many (`hasAttached()`)                         | N/A      | Set a `Collection` in factory state for plain M2M, or `->has()` the pivot entity for M2M with pivot data                |
+| `recycle()`                                            | ✅ works  |                                                                                                                         |
+| `afterMaking()` callback                               | ✅ works  |                                                                                                                         |
+| `afterCreating()` callback                             | ✅ works  |                                                                                                                         |
+| Polymorphic relationships                              | N/A      | No direct Doctrine equivalent                                                                                           |
+| `trashed()` / soft deletes                             | N/A      | Doctrine has no built-in soft deletes                                                                                   |
 
 ## Differences From Eloquent
 
-The list of behaviors below is what trips up developers coming from Eloquent factories. None of them are
-bugs — they fall out of how Doctrine handles persistence, instantiation, and relationships — but they are
-not obvious from reading the Laravel docs.
+This package mirrors Laravel's `Illuminate\Database\Eloquent\Factories\Factory` API as closely as possible,
+so the [Laravel docs](https://laravel.com/docs/11.x/eloquent-factories) work as your primary reference.
+The deviations below fall out of how Doctrine handles persistence, instantiation, and relationships — none of
+them are bugs, but they are not obvious from reading the Laravel docs.
 
 ### `make()` persists to the identity map
 
@@ -131,10 +163,10 @@ class User
     private string $name;
     private bool $admin = false;
     private Collection $posts;
-    
+
     public function __construct(string $name)
     {
-        $this->name = $name;
+        $this->name  = $name;
         $this->posts = new ArrayCollection;
     }
 }
@@ -146,8 +178,8 @@ class UserFactory extends DoctrineFactory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),  // matched to constructor parameter
-            'admin' => false,          // set via reflection after construction
+            'name'  => fake()->name(),  // matched to constructor parameter
+            'admin' => false,           // set via reflection after construction
         ];
     }
 }
@@ -189,11 +221,9 @@ The second argument to `->for()` (and `->has()`) is the **entity property name**
 relationship table, or class name:
 
 ```php
-// `Assignment` has a property `$owner` typed as `Course`
-Assignment::factory()->for($course, 'owner')->create();
-
-// `CourseSection` has a property `$parent` typed as `Course`
-CourseSection::factory()->for($course, 'parent')->create();
+// `Post` has a property `User $author`
+$user = User::factory()->create();
+$post = Post::factory()->for($user, 'author')->create();
 ```
 
 When the property name matches the related entity's basename (e.g. property `$user` of type `User`), magic
@@ -206,10 +236,10 @@ one side. The owning side persists correctly to the database, but **reading the 
 return an empty collection** until you flush and refresh:
 
 ```php
-$courseRole = CourseRole::factory()->forUser($user)->make();
+$post = Post::factory()->for($user)->make();
 
-$courseRole->getUser();      // returns $user            ← owning side
-$user->getCourseRoles();     // empty Collection         ← inverse side, NOT synced
+$post->getAuthor();  // returns $user      ← owning side
+$user->getPosts();   // empty Collection   ← inverse side, NOT synced
 ```
 
 This is the single biggest gotcha for developers coming from Eloquent, where models are dumb data
@@ -221,28 +251,28 @@ Sync the inverse side from `afterMaking()`. Put it in `configure()` so it runs e
 used:
 
 ```php
-class CourseRoleFactory extends DoctrineFactory
+class PostFactory extends DoctrineFactory
 {
-    protected $model = CourseRole::class;
+    protected $model = Post::class;
 
     public function definition(): array
     {
         return [
-            'user' => User::factory(),
-            'role' => fake()->word(),
+            'title'  => fake()->sentence(),
+            'author' => User::factory(),
         ];
     }
 
     public function configure(): static
     {
-        return $this->afterMaking(function (CourseRole $courseRole) {
-            $courseRole->getUser()->addCourseRole($courseRole);
+        return $this->afterMaking(function (Post $post) {
+            $post->getAuthor()->addPost($post);
         });
     }
 }
 ```
 
-Now `$user->getCourseRoles()` returns the new role immediately — no flush, no refresh.
+Now `$user->getPosts()` returns the new post immediately — no flush, no refresh.
 
 ### `afterMaking()` vs `afterCreating()`
 
@@ -252,22 +282,25 @@ Now `$user->getCourseRoles()` returns the new role immediately — no flush, no 
   next operation, or when you're modifying entities that are already persisted.
 
 ```php
-// afterMaking: build the graph before flush
-public function assigned(/* ... */): static
+class PostFactory extends DoctrineFactory
 {
-    return $this->afterMaking(function (Assignment $assignment) {
-        CourseLikeAssignment::factory()->for($assignment)->make(/* ... */);
-    });
-}
+    protected $model = Post::class;
 
-// afterCreating: needs the assignment's ID first
-public function withTasks(Task ...$tasks): static
-{
-    return $this->afterCreating(function (Assignment $assignment) use ($tasks) {
-        foreach ($tasks as $task) {
-            $assignment->addTask($task);
-        }
-    });
+    // afterMaking: create child entities in-memory before flush — they'll be persisted together
+    public function withComments(int $count = 3): static
+    {
+        return $this->afterMaking(function (Post $post) use ($count) {
+            Comment::factory()->count($count)->for($post)->make();
+        });
+    }
+
+    // afterCreating: needs the database-assigned ID, so it runs after flush
+    public function withSlug(): static
+    {
+        return $this->afterCreating(function (Post $post) {
+            $post->setSlug($post->getId() . '-' . str($post->getTitle())->slug());
+        });
+    }
 }
 ```
 
@@ -289,10 +322,10 @@ resolves any factories nested inside it:
 ```php
 use Doctrine\Common\Collections\ArrayCollection;
 
-User::factory()->create([
-    'children' => new ArrayCollection([
-        User::factory(),         // resolved to a User instance
-        User::factory()->make(), // already an instance, used as-is
+Post::factory()->create([
+    'tags' => new ArrayCollection([
+        Tag::factory(),         // resolved to a Tag instance
+        Tag::factory()->make(), // already an instance, used as-is
     ]),
 ]);
 ```
@@ -307,25 +340,25 @@ types — entities, factories, or attribute arrays. Callers get a flexible API a
 keep the relationship logic:
 
 ```php
-class AssignmentFactory extends DoctrineFactory
+class PostFactory extends DoctrineFactory
 {
-    public function forCourse(Course|CourseFactory|array|null $course): self
+    public function forAuthor(User|UserFactory|array|null $author = null): static
     {
-        $course ??= [];
-        $course = is_array($course) ? Course::factory()->make($course) : $course;
+        $author ??= [];
+        $author = is_array($author) ? User::factory()->make($author) : $author;
 
-        return $this->for($course, 'owner');
+        return $this->for($author, 'author');
     }
 }
 
 // All four usages work
-Assignment::factory()->forCourse();
-Assignment::factory()->forCourse($course);
-Assignment::factory()->forCourse(Course::factory());
-Assignment::factory()->forCourse(['name' => 'Test Course']);
+Post::factory()->forAuthor();
+Post::factory()->forAuthor($user);
+Post::factory()->forAuthor(User::factory());
+Post::factory()->forAuthor(['name' => 'Alice']);
 ```
 
-This is more flexible than the built-in magic `forCourse()`, which only accepts an attribute array.
+This is more flexible than the built-in magic `forUser()`, which only accepts an attribute array.
 
 ### Factory inheritance for entity hierarchies
 
@@ -333,23 +366,39 @@ When entities share an inheritance hierarchy, mirror it on the factories. An abs
 the shared definition; subclasses extend and add their own pieces:
 
 ```php
-abstract class CourseLikeFactory extends DoctrineFactory
+abstract class ContentFactory extends DoctrineFactory
 {
     public function definition(): array
     {
-        return ['name' => fake()->name() . "'s Course"];
+        return [
+            'title' => fake()->sentence(),
+            'body'  => fake()->paragraphs(3, true),
+        ];
     }
 }
 
-class CourseSectionFactory extends CourseLikeFactory
+class PostFactory extends ContentFactory
 {
-    protected $model = CourseSection::class;
+    protected $model = Post::class;
 
     public function definition(): array
     {
         return [
             ...parent::definition(),
-            'parent' => Course::factory(),
+            'author' => User::factory(),
+        ];
+    }
+}
+
+class PageFactory extends ContentFactory
+{
+    protected $model = Page::class;
+
+    public function definition(): array
+    {
+        return [
+            ...parent::definition(),
+            'slug' => fake()->slug(),
         ];
     }
 }
