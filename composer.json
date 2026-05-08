@@ -65,6 +65,13 @@
     "orchestra/testbench": "^10.0",
     "pestphp/pest": "^v3.1.0"
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Stemble\\LaravelDoctrineFactory\\LaravelDoctrineFactoryServiceProvider"
+      ]
+    }
+  },
   "config": {
     "sort-packages": true,
     "allow-plugins": {
