@@ -6,22 +6,27 @@ on:
   pull_request:
 
 jobs:
-  # NOTE: PHP 8.4 only.
-  # composer.lock pins transitive deps (doctrine/instantiator, symfony/*, etc.)
-  # at versions that require PHP >= 8.4, even though composer.json claims
-  # ^8.2|^8.3|^8.4. composer.json's PHP range and laravel/framework range
-  # (^9|^10|^11|^12|^13) should be reconciled with what actually resolves
-  # before broadening this workflow.
   tests:
     runs-on: ubuntu-latest
-    name: PHP 8.4
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Testbench, Pest, and laravel-doctrine/orm have matching major
+          # versions that must be resolved together for older Laravel releases.
+          - { php: '8.2', laravel: '^9.0', testbench: '^7.0', pest: '^2.0', orm: '^2.1' }
+          - { php: '8.2', laravel: '^10.0', testbench: '^8.0', pest: '^2.0', orm: '^2.1' }
+          - { php: '8.3', laravel: '^11.0', testbench: '^9.0', pest: '^3.1', orm: '^3.0' }
+          - { php: '8.3', laravel: '^12.0', testbench: '^10.0', pest: '^3.1', orm: '^3.0' }
+          - { php: '8.4', laravel: '^13.0', testbench: '^11.0', pest: '^3.1', orm: '^3.0' }
+    name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: ${{ matrix.php }}
           tools: composer:v2
           coverage: none
 
@@ -33,11 +38,19 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-php8.4-composer-${{ hashFiles('composer.json') }}
-          restore-keys: ${{ runner.os }}-php8.4-composer-
+          key: ${{ runner.os }}-php${{ matrix.php }}-laravel${{ matrix.laravel }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: ${{ runner.os }}-php${{ matrix.php }}-laravel${{ matrix.laravel }}-composer-
+
+      - name: Select dependency versions
+        run: >-
+          composer require --no-update
+          "laravel/framework:${{ matrix.laravel }}"
+          "orchestra/testbench:${{ matrix.testbench }}"
+          "pestphp/pest:${{ matrix.pest }}"
+          "laravel-doctrine/orm:${{ matrix.orm }}"
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: composer update --prefer-dist --no-interaction --no-progress --with-all-dependencies
 
       - name: Lint (Pint)
         run: composer lint -- --test
