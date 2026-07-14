@@ -9,7 +9,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Added
 
-- GitHub Actions test workflow and CI coverage for PHP 8.4.
+- GitHub Actions test workflow with a PHP (8.2–8.4) and Laravel (12, 13) matrix.
 - Support for `afterMaking`, `afterCreating`, `recycle`, and many-to-many relationships.
 - Documentation covering feature compatibility, useful patterns, persistence semantics, and why this package is separate from Laravel's official factories.
 
@@ -19,6 +19,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 
+- Dropped support for Laravel 9, 10, and 11 (all EOL) and `laravel-doctrine/orm` 2.x. The package now requires Laravel 12 or 13 and `laravel-doctrine/orm` 3.x.
 - Exclude development files from published packages.
 - Clarify that `make()` persists entities without flushing, while `create()` persists and flushes them.
 
