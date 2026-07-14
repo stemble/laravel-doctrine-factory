@@ -12,12 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Testbench, Pest, and laravel-doctrine/orm have matching major
-          # versions that must be resolved together for older Laravel releases.
-          - { php: '8.2', laravel: '^9.0', testbench: '^7.0', pest: '^2.0', orm: '^2.1' }
-          - { php: '8.2', laravel: '^10.0', testbench: '^8.0', pest: '^2.0', orm: '^2.1' }
-          - { php: '8.3', laravel: '^11.0', testbench: '^9.0', pest: '^3.1', orm: '^3.0' }
+          # Testbench majors track Laravel majors (10 -> L12, 11 -> L13).
+          # Laravel 12 supports PHP >= 8.2; Laravel 13 requires PHP >= 8.3.
+          - { php: '8.2', laravel: '^12.0', testbench: '^10.0', pest: '^3.1', orm: '^3.0' }
           - { php: '8.3', laravel: '^12.0', testbench: '^10.0', pest: '^3.1', orm: '^3.0' }
+          - { php: '8.4', laravel: '^12.0', testbench: '^10.0', pest: '^3.1', orm: '^3.0' }
+          - { php: '8.3', laravel: '^13.0', testbench: '^11.0', pest: '^3.1', orm: '^3.0' }
           - { php: '8.4', laravel: '^13.0', testbench: '^11.0', pest: '^3.1', orm: '^3.0' }
     name: PHP ${{ matrix.php }} / Laravel ${{ matrix.laravel }}
     steps:
