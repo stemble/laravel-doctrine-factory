@@ -52,7 +52,11 @@
       "@build",
       "@php vendor/bin/testbench serve --ansi"
     ],
-    "lint": "@php vendor/bin/pint"
+    "lint": "@php vendor/bin/pint",
+    "release": [
+      "Composer\\Config::disableProcessTimeout",
+      "bin/release.sh"
+    ]
   },
   "require": {
     "php": "^8.2|^8.3|^8.4",

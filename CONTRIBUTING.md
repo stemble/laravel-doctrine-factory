@@ -63,6 +63,24 @@ Before submitting a pull request:
 Pull requests should target `main`. Maintainers may request changes to improve coverage, API consistency, or support
 across the Laravel and Doctrine versions supported by `composer.json`.
 
+## Releasing
+
+Releases are cut by maintainers with:
+
+```bash
+composer release
+```
+
+The script requires [git-cliff](https://git-cliff.org/) (`brew install git-cliff`) and a clean working copy. It
+determines the next semantic version from the conventional commits since the last tag, generates the matching
+`CHANGELOG.md` section from those commits, and — after you confirm the diff — describes the working copy commit and
+sets the tag. It then prints the `jj git push` commands to publish the commit and tag.
+
+Because the changelog is generated from commit messages, use [Conventional
+Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `test:`, `chore:`, `ci:`, and so on). The
+commit type determines both the changelog section a change lands in and whether the release is a major, minor, or
+patch bump.
+
 ## Reporting Issues
 
 Search existing issues before opening a new one. Include the PHP, Laravel, and Doctrine versions involved, a minimal
